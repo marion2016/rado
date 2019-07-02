@@ -1,0 +1,490 @@
+Metadata-Version: 2.1
+Name: Rado
+Version: 0.0.2
+Summary: The InterFace Test Framework based on PyTest, Request and Allure
+Home-page: https://github.com/TheoTT/my_doc
+Author: lit
+Author-email: tt137378245@outlook.com
+License: UNKNOWN
+Description: # Rado_InterFace_test
+        
+        基于pytest + requests + excel/json/yaml + locust + allure 的接口测试与接口性能自动化测试框架。
+        
+        >执行前置条件 - 读取接口信息（请求方法、URL、参数）- 发送请求 - 验证结果（checkpoints、validate）- 执行后置收尾工作。
+        
+        
+        
+        ## 功能介绍
+        
+        | 读取excel中测试用例                                          |
+        | ------------------------------------------------------------ |
+        | 读取json中测试用例                                           |
+        | 读取测试管理平台数据库中测试用例                             |
+        | 读取ymal中测试用例                                           |
+        | 读取excel中测试用例数据通过提前定义的模板自动生成            |
+        | 读取json中测试用例数据通过提前定义的模板自动生成             |
+        | 读取测试管理平台数据库中测试用例数据通过提前定义的模板自动生成 |
+        | 读取ymal中测试用例数据通过提前定义的模板自动生成             |
+        | 手动编写测试用例代码（需要符合PyTest规范）                   |
+        | 支持HTTP协议的不同方式请求，如GET、POST、PUT、DELETE、PATCH等请求方式。 |
+        | 支持RPC协议的不同方式请求，如                                |
+        | HTTP请求支持URL请求参数及BODY请求参数                        |
+        | HTTP请求支持JSON格式的请求                                   |
+        | HTTP请求支持XML等数据格式的请求                              |
+        | 仅验证status_code                                            |
+        | 验证status_code + response_body的整体验证                    |
+        | 验证status_code + response_body指定字段的验证（使用默认字段查找路径） |
+        | 验证status_code + response_body指定字段的验证（在validator中给定字段查找路径） |
+        | == 验证                                                      |
+        | in验证                                                       |
+        | len验证                                                      |
+        | key验证                                                      |
+        | 用例执行log                                                  |
+        | 用例执行结果json文件记录                                     |
+        | 用例执行结果数据库记录                                       |
+        | excel/json/ymal/数据库四种方式维护的测试用例相互转换（导入、导出工具） |
+        | 通过配置文件进行测试配置管理                                 |
+        | 从SWAGGER或者其他支持HAR标准，抓包工具测试工具中解析接口信息自动生成基本测试用例工具 |
+        | 提供项目脚手架，能够通过cli等方式自动生成通用性较高的测试项目结构 |
+        | 一键执行，能够指定执行特定用例。                             |
+        | allure测试报告生成，导出。                                   |
+        | 支持容器方式运行。                                           |
+        | 集成locust， 能够进行基本的接口性能测试。                    |
+        |                                                              |
+        
+        
+        
+        ## QuikStart
+        
+        - 命令行接口
+        - 项目结构
+        - 测试用例编写
+        - 测试代码编写
+        - 执行测试
+        - 生成测试报告
+        
+        
+        
+        ### 命令行接口
+        
+        ```
+        # rado --help
+        Usage: rado [OPTIONS] COMMAND [ARGS]...
+        
+          Rado.
+        
+          The interface test and interface performance automation test framework
+          based on pytest + requests + excel/json/yaml + locust + allure.
+        
+        Options:
+          --help  Show this message and exit.
+        
+        Commands:
+          check   Check your testcase file(excel).
+          create  Create a new project.
+          gen     Generate init test code based on code template
+          run     Execute test cases.
+        
+        ```
+        
+        
+        
+        ### 项目结构
+        
+        生成的测试项目结构如下
+        
+        > ├── conftest.py  
+        > ├── core  
+        > │   └── __init__.py  
+        > ├── docker-compose.yml  
+        > ├── __init__.py  
+        > ├── logs  
+        > │   └── __init__.py  
+        > ├── preparedData  
+        > │   ├── __init__.py  
+        > │   └── Project_ModelName_test_data.xlsx  
+        > ├── Readme.md  
+        > ├── Result  
+        > │   └── __init__.py  
+        > ├── test_case  
+        > │   └── __init__.py  
+        > └── utilse  
+        >     └── __init__.py  
+        
+        其中：
+        
+         - preparedData: 存放测试用例信息，当前使用Excel进行管理。
+        
+         - test_case: 存放测试用例代码。
+        
+           > File: test_case.py —— 相当于功能模块/组件/业务场景级别的TestSuite。  
+           >
+           > ​	Class: TestCase —— 相当于单个接口级别TestSuite。
+           >
+           > ​		Method： test_case() —— 测试用例
+        
+        - result： 存放测试数据、日志及测试报告。
+        
+        - utilse： 存放在编写测试用例代码时需要使用到的工具函数，例如读取从Excel中读取数据。
+        
+        - core： 存放自定义的Exception，Logger等实例，避免部分模块的循环导入。
+        
+        - 顶层__init__.py: 存放BaseTest类，所有的测试用例均基于该类，提供如下特殊方法：
+        
+          1. `setup_class()`: 在执行TestCase Class中所有测试用例之前进行一些准备工作，例如准备测试数据、登录系统等操作。
+        
+          2. `teardown_class`: 在执行TestCase Class中所有测试用例之后进行一些收尾工作，例如清除测试数据、重新初始化环境等操作。
+        
+          3. `setup_method()`: 在执行某个测试用例之前进行一些准备工作，例如准备测试数据、登录系统等操作。`
+        
+          4. `teardown_method`: 在执行单个测试用例之后进行一些收尾工作，例如清除测试数据、重新初始化环境等操作。
+        
+          5. `make_requests()`:  根据测试用例描述信息，使用Request模块发送对应http请求，包含主要请求参数method、url等的简单校验。
+        
+          6. `diff_respons()`:  比对接口返回结果与测试用例中描述的预期返回结果。
+        
+             > 当前主要对Respons状态码，Body进行对比。
+        
+             
+        
+        ### 编写测试用例
+        
+        - 接口测试用例编写（Excel）
+        - 测试用例代码编写
+        
+        #### 接口测试用例编写
+        
+        基于要因分析表编写测试用例，包含接口相关信息，如请求方法、URL、参数、预期返回值等信息。
+        
+        其中，Excel至少包含如下18个字段，并且顺序与名称需要相同。
+        
+        | 测试用例番号 | 测试用例名     | level | 预置条件       | 测试内容                     | 预期结果                          | category | automated | caseid | method | url                                                      | data | status_code | checkpoints                                                  | validate | parameterize | result |
+        | ------------ | -------------- | ----- | -------------- | ---------------------------- | --------------------------------- | -------- | --------- | ------ | ------ | -------------------------------------------------------- | ---- | ----------- | ------------------------------------------------------------ | -------- | ------------ | ------ |
+        | Insert_001   | 插入接口空参数 | 1     | 1.插入接口可用 | 1.调用数据插入接口 2.插入{ } | 1.插入失败 2.respones消息提示正确 | 异常系   | 2         | 9033   | GET    | [/api/tests/](http://192.168.20.47:8080/datanode/simple) | {}   | 422         | {   "code":"422",   "detail":    {     "test_para_a":["Missing data for required field."],     "test_para_b":["Missing data for required field."]    },   "message":"\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25" } |          |              |        |
+        |              |                |       |                |                              |                                   |          |           |        |        |                                                          |      |             |                                                              |          |              |        |
+        
+        
+        
+        - level：测试用例等级，一般正常系为`1`，异常系为`2`以上，其中测试等级为1的测试用例用于指派冒烟测试
+        - automated：该值为`2`表示该条用例为自动执行，值为`1`表示手动执行（这么设计是为了适应Testlink的神逻辑）
+        
+        - data： 该用例的接口请求参数
+        - caseid：测试用例id，在测试用例上传测试用例管理平台后获得（当前为testlink给出）
+        - method： 接口请求方法
+        -   url： 接口的endpoint
+        - status_code： 接口返回的状态码
+        - checkpoints ：为接口预期返回结果检查项。若为字典，会将该字典中的每个key：vcalue取出与返回的body进行逐项对比，若为列表或空，会进行全等对比
+        - validate： 标记结果验证器的验证方式，枚举值。可填0/1
+        
+        - parameterize :  该条用例是否需要进行参数化. 值为`1`需要参数化,值为`0`不需要参数化
+        - result：标记用例执行结果，枚举，可选值：成功/失败/阻塞/未执行
+        
+        #### 实例：
+        
+        需测试接口信息：
+        
+        ```
+        url：/api/tests
+        
+        parameters:
+        	"test_para_a"
+        		description: "the tests api's first para"
+        		required: true
+        		type: string
+        	
+        	"test_para_b"
+        		description: "the tests api's first para"
+        		required: true
+        		type: int
+        		
+        respons:
+        	200:
+        		{
+                	"status_code": 200,
+                    "content": {
+                    	"para_a":"sys.cpu.nice",
+                     	"para_b":1531719554123
+                    }
+                }
+        
+        	422:
+        		{
+                	"code":"422",
+                  	"detail":
+                   	{
+                    	"test_para_a":["Missing data for required field."],
+                    	"test_para_b":["Missing data for required field."]
+                   	},
+                  	"message":"\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25"
+                 	}
+        		}
+        		
+        ```
+        
+        
+        
+        接口测试用例编写：
+        
+        | 测试用例番号 | 测试用例名              | level | 预置条件       | 测试内容                                                     | 预期结果                          | category | automated | caseid | method | url                                                      | data                                                         | status_code | checkpoints                                                  | validate                                                     | result | 关联JIRA |
+        | ------------ | ----------------------- | ----- | -------------- | ------------------------------------------------------------ | --------------------------------- | -------- | --------- | ------ | ------ | -------------------------------------------------------- | ------------------------------------------------------------ | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------ | -------- |
+        | Insert_001   | 插入接口空参数          | 1     | 1.插入接口可用 | 1.调用数据插入接口 2.插入{ }                                 | 1.插入失败 2.respones消息提示正确 | 异常系   | 2         | 9033   | GET    | [/api/tests/](http://192.168.20.47:8080/datanode/simple) | {}                                                           | 422         | {   "code":"422",   "detail":    {     "test_para_a":["Missing data for required field."],     "test_para_b":["Missing data for required field."]    },   "message":"\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25" } | {     "code": ["=="],     "detail": ["==", "len_2"],     "message": ["=="] } |        |          |
+        | Insert_002   | 测试value参数缺失插入   | 1     | 1.插入接口可用 | 1.调用数据插入接口 2.插入{"metric":"cpu", "timestamp":14785269422,  tags:{"tag1":"name1" } } | 1.插入失败 2.respones消息提示正确 | 异常系   | 2         | 9036   | GET    | [/api/tests/](http://192.168.20.47:8080/datanode/simple) | {           "test_para_a": "sys.cpu.nice" }                  | 422         | {   "code":"422",   "detail":    {     "test_para_a":["Missing data for required field."],     "test_para_b":["Missing data for required field."]    },   "message":"\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25" } | {     "code": ["=="],     "detail": ["in", "len_1"],     "message": ["=="] } |        |          |
+        | Insert_003   | 测试value为值为null插入 | 2     | 1.插入接口可用 | 1.调用数据插入接口 2.插入{"metric":"cpu", "timestamp":14785269422, "value":null "tags":{"tag1":"name2" } } | 1.插入失败 2.respones消息提示正确 | 异常系   | 2         | 9039   | GET    | [/api/tests/](http://192.168.20.47:8080/datanode/simple) | {           "test_para_a": "sys.cpu.nice",           "test_para_b": 1531719554123 } | 200         | {   "para_a":"sys.cpu.nice",   "para_b":1531719554123  }     |                                                              |        |          |
+        
+        
+        
+        ### 编写测试代码
+        
+        
+        
+        ```
+        
+        ```
+        
+        
+        
+        
+        
+        ### 执行测试
+        
+        - 准备运行测试所需的依赖环境
+        - 执行测试
+        
+        
+        
+        #### 准备运行环境（只需要在首次运行时执行）
+        
+        - 激活虚拟环境：`pipenv shell`，若报错则指定Python解释器的路径`pipenv shell --python /path/to/python`。
+        
+        - 安装依赖包：`pipenv install`
+        
+        
+        
+        #### 执行测试
+        
+        - 方式一： 执行`rado run --test_case /test_case/UserManager `  
+        
+        - 方式二： 
+        ```
+        py.test -vv --junitxml=Result/result_{datetime.now().time()}.xml --alluredir=Result/result_{datetime.now().time()}/
+        ```
+        
+        > 上述两种执行方式等价。
+        
+        - `--junitxml=Result/result_{datetime.now().time()}.xml` 将junitxml格式的测试结果文件保存在Result目录下的result_当前时间.xml
+        - `alluredir=Result/result_{datetime.now().time()}/`  将Allure所需的结果数据文件保存在Result目录下的result_当前时间点/目录下。
+        
+        实例:
+        
+        ```
+        
+        ```
+        
+        
+        
+        
+        
+        ### 生成报告
+        
+        > 该部分还存在问题，参数化之后的报告展示结果不符合预期结果。
+        
+        ```
+        docker-compose up -d allure
+        ```
+        
+        上述命令执行成功后，本地浏览器访问`http://127.0.0.1:4040`
+        
+        
+        
+        
+        
+        ##  validate
+        
+        - 验证原理
+        - 验证方式
+        - 实例
+        
+        ### 验证原理
+        
+        ```
+        # 全等验证（validate不填写）
+        # 接口实际返回值resp_body:
+        {
+        	"code":"422",
+            "detail":
+            {
+            	"test_para_a":["Missing data for required field."],
+                "test_para_b":["Missing data for required field."]
+            },
+            "message":"\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25"
+        }
+        
+        # checkpoints:
+        {
+        	"code":"422",
+          	"detail":
+           	{
+            	"test_para_a":["Missing data for required field."],
+            	"test_para_b":["Missing data for required field."]
+           	},
+          	"message":"\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25"
+        }
+        
+        ```
+        
+        
+        ```
+        # 部分验证（validate=0）
+        # 接口实际返回值resp_body:
+        {
+        	"code":"422",
+            "detail":
+            {
+            	"test_para_a":["Missing data for required field."],
+                "test_para_b":["Missing data for required field."]
+            },
+            "message":"\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25"
+        }
+        
+        # checkpoints:
+        {
+        	"code":"422",
+          	"test_para_a":["Missing data for required field."],
+          	"test_para_b":["Missing data for required field."]
+        }
+        
+        ```
+        
+        
+        
+        
+        ### 验证方式
+        
+        - 全等验证
+        - 部分验证
+        
+        
+        
+        #### 全等验证
+        
+        
+        
+        - checkpoints 与 resp_body 做整体全等验证
+        
+          当validate 列的值为“1”时, 对整体进行全等验证
+        
+          > assert 语句为: `assert resp_body == checkpoints`
+        
+          
+        
+          
+        
+        
+        #### 部分验证
+        
+        `validate= 0`, 验证resp_body 中的某个key 的value是否包含在checkpoints对应key的value中.
+        
+        > step1：先取到 需要验证的 key，即checkpoints.keys()
+        >
+        > step2：在resp_body 对获取key的value值如下，$..key获取resp_body 所有key的值
+        >
+        > `resp_data = jsonpath("resp_body", "$..key")`
+        >
+        > step3：对于唯一key，去全等验证，对于存在重复key ，适用于"=="或者"in"，如下例中id填写一个也可以
+        
+        
+        ```
+        部分验证，在 返回的response中带有 随机id 的场景就比较方便，或者返回中response内容比较多
+        而我们需要去 check一些比较重要的字段。
+        
+        部分验证，对于返回的response 有多个重复 字段的， 用列表处理，如 
+        # 接口实际返回值resp_body:
+        {
+        	"code":"200",
+            "data":[{
+                "id":"123456"
+            },
+            {
+                "id":"654321"
+            }
+            ]
+        }
+        # checkpoints:
+        {
+        	"code":"200",
+          	"id":["123456","654321"] # ”==“
+        }
+        {
+        	"code":"200",
+          	"id":["123456"] # ”in“
+        }
+        
+        ```
+        
+        
+        
+        
+        
+        ## 架构
+        
+        暂无。
+        
+        
+        
+        
+        
+        ## RoadMap
+        
+        ### 1.0.0
+        
+        | 读取excel中测试用例                                          |
+        | ------------------------------------------------------------ |
+        | 读取excel中测试用例数据通过提前定义的模板自动生成            |
+        | 手动编写测试用例代码（需要符合PyTest规范）                   |
+        | 支持HTTP协议的不同方式请求，如GET、POST、PUT、DELETE、PATCH等请求方式。 |
+        | HTTP请求支持URL请求参数及BODY请求参数                        |
+        | HTTP请求支持JSON格式的请求                                   |
+        | 仅验证status_code                                            |
+        | 验证status_code + response_body的整体验证                    |
+        | 验证status_code + response_body指定字段的验证（使用默认字段查找路径） |
+        | == 验证                                                      |
+        | 用例执行log                                                  |
+        | 提供项目脚手架，能够通过cli等方式自动生成通用性较高的测试项目结构 |
+        | 托管至PyPI，文档托管至readthedocs                            |
+        
+        
+        
+        ### 1.1.0
+        
+        | 读取测试管理平台数据库中测试用例                             |
+        | ------------------------------------------------------------ |
+        | 读取测试管理平台数据库中测试用例数据通过提前定义的模板自动生成 |
+        | 验证status_code + response_body指定字段的验证（在validator中给定字段查找路径） |
+        | 用例执行结果数据库记录                                       |
+        | 通过配置文件进行测试配置管理                                 |
+        
+        
+        
+        
+        
+        ## 详细设计
+        
+        
+        
+        ### 功能详细设计
+        
+        (暂无)
+        
+        
+        
+        ### 接口详细设计
+        
+        (暂无)
+        
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+Provides-Extra: Rado

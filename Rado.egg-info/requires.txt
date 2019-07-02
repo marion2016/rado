@@ -1,0 +1,11 @@
+allure-pytest==2.6.5
+Click==7.0
+colorama==0.4.1
+colorlog==4.0.2
+datatest==0.9.6
+jsonpath==0.81
+paramiko==2.5.0
+xlrd==1.2.0
+requests==2.22.0
+
+[Rado]
