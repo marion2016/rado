@@ -52,7 +52,7 @@ def get_test_data_from_excel(excel_file, num_sheet):
 
 
 def load_row_data_by_json(row_data, row, col):
-    ret = row_data
+    ret = row_data[col]
     if row_data[col] == '':
         ret = ''
     elif row_data[col] == 0.0:

@@ -1,5 +1,5 @@
-import requests
 import os
+import requests
 
 from datetime import datetime
 
@@ -44,10 +44,8 @@ class BaseTest:
     def diff_response(self, resp_obj, response):
         resp_json = resp_obj_2_resp_json(resp_obj)
 
-        print('resp_json: ', resp_json)
-        logger.log_debug(f'resp_json:\n{resp_json}')
-        print('status_code: ', resp_json['status_code'],
-              response['status_code'])
+        logger.log_debug(f"status_code: {resp_json['status_code']}")
+        logger.log_debug(f"resp_content: {resp_json['content']}")
 
         try:
             logger.log_info(
@@ -101,18 +99,17 @@ expect_data:{response['checkpoints']}")
             logger.log_error(err_msg)
             raise exceptions.ParamsError(err_msg)
 
-        logger.log_debug("{method} {url}".format(method=method, url=url))
-        logger.log_debug("request kwargs(raw):{kwargs}".format(
-            kwargs=req_kwargs))
+        logger.log_debug(f"{method} {url}")
+        logger.log_debug(f"headers:{self.headers}")
+        logger.log_debug(f"request kwargs:{req_kwargs}")
 
         if method == 'GET':
             resp_obj = requests.request(
                 url=url, method=method, verify=self.verify_ssl,
                 headers=self.headers, params=req_kwargs['json'])
-            print(resp_obj.url)
             logger.log_debug(f"{method} {resp_obj.url}")
         else:
             resp_obj = requests.request(
-                url=url, method=method,  verify=self.verify_ssl,
+                url=url, method=method, verify=self.verify_ssl,
                 headers=self.headers, **req_kwargs)
         return resp_obj
