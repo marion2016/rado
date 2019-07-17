@@ -1,0 +1,62 @@
+项目结构
+~~~~~~~~
+
+生成的测试项目结构如下
+
+::
+
+    # tree -L 2
+   ├── Pipfile
+   ├── Pipfile.lock
+   ├── Readme.md
+   └── test_app
+       ├── conftest.py
+       ├── core
+       ├── __init__.py
+       ├── logs
+       ├── preparedData
+       ├── __pycache__
+       ├── Result
+       ├── test_case
+       └── utilse
+
+其中：
+
+-  preparedData: 存放测试用例信息，当前使用Excel进行管理。
+
+-  test\_case: 存放测试用例代码。
+
+    File: test\_case.py —— 相当于功能模块/组件/业务场景级别的TestSuite。
+
+    ​ Class: TestCase —— 相当于单个接口级别TestSuite。
+
+    ​ Method： test\_case() —— 测试用例
+
+-  result： 存放测试数据、日志及测试报告。
+
+-  utilse：
+   存放在编写测试用例代码时需要使用到的工具函数，例如读取从Excel中读取数据。
+
+-  core： 存放自定义的Exception，Logger等实例，避免部分模块的循环导入。
+
+-  顶层\_\_init\_\_.py:
+   存放BaseTest类，所有的测试用例均基于该类，提供如下特殊方法：
+
+#. ``setup_class()``: 在执行TestCase
+   Class中所有测试用例之前进行一些准备工作，例如准备测试数据、登录系统等操作。
+
+#. ``teardown_class``: 在执行TestCase
+   Class中所有测试用例之后进行一些收尾工作，例如清除测试数据、重新初始化环境等操作。
+
+#. ``setup_method()``:
+   在执行某个测试用例之前进行一些准备工作，例如准备测试数据、登录系统等操作。\`
+
+#. ``teardown_method``:
+   在执行单个测试用例之后进行一些收尾工作，例如清除测试数据、重新初始化环境等操作。
+
+#. ``make_requests()``:
+   根据测试用例描述信息，使用Request模块发送对应http请求，包含主要请求参数method、url等的简单校验。
+
+#. ``diff_respons()``: 比对接口返回结果与测试用例中描述的预期返回结果。
+
+       当前主要对Respons状态码，Body进行对比。

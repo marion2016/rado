@@ -1,0 +1,21 @@
+命令行接口
+~~~~~~~~~~
+
+::
+
+    # rado --help
+    Usage: rado [OPTIONS] COMMAND [ARGS]...
+
+      Rado.
+
+      The interface test and interface performance automation test framework
+      based on pytest + requests + excel/json/yaml + locust + allure.
+
+    Options:
+      --help  Show this message and exit.
+
+    Commands:
+      check   Check your testcase file(excel).
+      create  Create a new project.
+      gen     Generate init test code based on code template
+      run     Execute test cases.

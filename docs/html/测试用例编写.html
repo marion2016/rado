@@ -1,0 +1,464 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <title>测试用例编写 &#8212; Rado 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="测试代码编写" href="测试代码编写.html" />
+    <link rel="prev" title="项目结构" href="项目结构.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>测试用例编写<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="#id2">接口测试用例表说明</a></p></li>
+<li><p><a class="reference internal" href="#id4">实例</a></p></li>
+</ul>
+<div class="section" id="id2">
+<span id="id3"></span><h2>接口测试用例表说明<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>基于要因分析表编写测试用例，包含接口相关信息，如请求方法、URL、参数、预期返回值等信息。</p>
+<p>其中，Excel至少包含如下19个字段，并且顺序与名称需要相同。</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 11%" />
+<col style="width: 3%" />
+<col style="width: 31%" />
+<col style="width: 2%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Case Id</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Component</p></th>
+<th class="head"><p>Status</p></th>
+<th class="head"><p>Priority</p></th>
+<th class="head"><p>Labels</p></th>
+<th class="head"><p>Precondition</p></th>
+<th class="head"><p>Test Script (Step-by-Step) - Step</p></th>
+<th class="head"><p>Test Script (Step-by-Step) - Test Data</p></th>
+<th class="head"><p>Test Script (Step-by-Step) - Expected Result</p></th>
+<th class="head"><p>Category</p></th>
+<th class="head"><p>Automated</p></th>
+<th class="head"><p>Method</p></th>
+<th class="head"><p>Url</p></th>
+<th class="head"><p>Status Code</p></th>
+<th class="head"><p>Checkpoints</p></th>
+<th class="head"><p>Validators</p></th>
+<th class="head"><p>Parameterize</p></th>
+<th class="head"><p>Import Version</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Insert_001</p></td>
+<td><p>插入接口空参数</p></td>
+<td><p>用户注册</p></td>
+<td><p>Approved</p></td>
+<td><p>Low</p></td>
+<td><p>Smoke</p></td>
+<td><p>1.系统部署完成2.插入接口可用</p></td>
+<td><p>1.调用数据插入接口 2.插入{ }</p></td>
+<td><p>{ “test_para_a”: “sys.cpu.nice” }</p></td>
+<td><p>1.插入失败 2.respones消息提示正确</p></td>
+<td><p>异常系</p></td>
+<td><p>2</p></td>
+<td><p>GET</p></td>
+<td><p><a class="reference external" href="http://192.168.20.47:8080/datanode/simple">/api/tests/</a></p></td>
+<td><p>422</p></td>
+<td><p>{ “code”:”422”, “detail”: { “test_para_a”:[“Missing data for required field.”], “test_para_b”:[“Missing data for required field.”] }, “message”:”bf7c4257036e821a8c931d25” }</p></td>
+<td></td>
+<td></td>
+<td><p>1.0.0</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Status
+：测试用例状态，枚举值，<code class="docutils literal notranslate"><span class="pre">Approved</span></code>为已评审的用例，<code class="docutils literal notranslate"><span class="pre">Draft</span></code>为草稿，即创建未评审，<code class="docutils literal notranslate"><span class="pre">Deprecated</span></code>为已废弃的用例</p></li>
+<li><p>Priority：用例等级：<code class="docutils literal notranslate"><span class="pre">High</span></code>，<code class="docutils literal notranslate"><span class="pre">Normal</span></code>，<code class="docutils literal notranslate"><span class="pre">Low</span></code>,对应用例等级高/中/低</p></li>
+<li><p>Labels：标签，非必填，如可以加上标签标记一个冒烟测试用例</p></li>
+<li><p>Automated：该值为<code class="docutils literal notranslate"><span class="pre">2</span></code>表示该条用例为自动执行，值为<code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p>Test Data： 该用例的接口请求参数</p></li>
+<li><p>Method： 接口请求方法</p></li>
+<li><p>Url： 接口的endpoint</p></li>
+<li><p>Status Code： 接口返回的状态码</p></li>
+<li><p>Checkpoints
+：为接口预期返回结果检查项。若为字典，会将该字典中的每个key：value取出与返回的body进行逐项对比，若为列表或空，会进行全等对比</p></li>
+<li><p>Validators： 标记结果验证器的验证方式，详见验证器 <a class="reference internal" href="#validate">validate</a></p></li>
+<li><p>Parameterize : 该条用例是否需要进行参数化.
+值为<code class="docutils literal notranslate"><span class="pre">1</span></code>需要参数化,值为<code class="docutils literal notranslate"><span class="pre">0</span></code>不需要参数化</p></li>
+<li><p>Import Version：标记用例创建版本，必填</p></li>
+</ul>
+</div>
+<div class="section" id="id4">
+<span id="id5"></span><h2>实例<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>需测试接口信息：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>url：/api/tests
+
+parameters:
+    &quot;test_para_a&quot;
+        description: &quot;the tests api&#39;s first para&quot;
+        required: true
+        type: string
+
+    &quot;test_para_b&quot;
+        description: &quot;the tests api&#39;s first para&quot;
+        required: true
+        type: int
+
+respons:
+    200:
+        {
+            &quot;status_code&quot;: 200,
+            &quot;content&quot;: {
+                &quot;para_a&quot;:&quot;sys.cpu.nice&quot;,
+                &quot;para_b&quot;:1531719554123
+            }
+        }
+
+    422:
+        {
+            &quot;code&quot;:&quot;422&quot;,
+            &quot;detail&quot;:
+            {
+                &quot;test_para_a&quot;:[&quot;Missing data for required field.&quot;],
+                &quot;test_para_b&quot;:[&quot;Missing data for required field.&quot;]
+            },
+            &quot;message&quot;:&quot;\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25&quot;
+            }
+        }
+</pre></div>
+</div>
+<p>接口测试用例编写：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 1%" />
+<col style="width: 5%" />
+<col style="width: 16%" />
+<col style="width: 10%" />
+<col style="width: 7%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 1%" />
+<col style="width: 9%" />
+<col style="width: 2%" />
+<col style="width: 26%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Case Id</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Component</p></th>
+<th class="head"><p>Status</p></th>
+<th class="head"><p>Priority</p></th>
+<th class="head"><p>Labels</p></th>
+<th class="head"><p>Precondition</p></th>
+<th class="head"><p>Test Script (Step-by-Step) - Step</p></th>
+<th class="head"><p>Test Script (Step-by-Step) - Test Data</p></th>
+<th class="head"><p>Test Script (Step-by-Step) - Expected Result</p></th>
+<th class="head"><p>Category</p></th>
+<th class="head"><p>Automated</p></th>
+<th class="head"><p>Method</p></th>
+<th class="head"><p>Url</p></th>
+<th class="head"><p>Status Code</p></th>
+<th class="head"><p>Checkpoints</p></th>
+<th class="head"><p>Validators</p></th>
+<th class="head"><p>Parameterize</p></th>
+<th class="head"><p>Import Version</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Insert_001</p></td>
+<td><p>插入接口空参数</p></td>
+<td><p>用户注册</p></td>
+<td><p>Approved</p></td>
+<td><p>Low</p></td>
+<td><p>Smoke</p></td>
+<td><p>1.系统部署完成2.插入接口可用</p></td>
+<td><p>1.调用数据插入接口 2.插入{ }</p></td>
+<td><p>{}</p></td>
+<td><p>1.插入失败 2.respones消息提示正确</p></td>
+<td><p>异常系</p></td>
+<td><p>2</p></td>
+<td><p>POST</p></td>
+<td><p><a class="reference external" href="http://192.168.20.47:8080/datanode/simple">/api/tests/</a></p></td>
+<td><p>422</p></td>
+<td><p>{ “code”:”422”, “detail”: { “test_para_a”:[“Missing data for required field.”], “test_para_b”:[“Missing data for required field.”] }, “message”:”bf7c4257036e821a8c931d25” }</p></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>1.0.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Insert_002</p></td>
+<td><p>测试value参数缺失插入</p></td>
+<td><p>用户注册</p></td>
+<td><p>Approved</p></td>
+<td><p>Normal</p></td>
+<td></td>
+<td><p>1.系统部署完成2.插入接口可用</p></td>
+<td><p>1.调用数据插入接口 2.插入{“metric”:”cpu”, “timestamp”:14785269422, tags:{“tag1”:”name1” } }</p></td>
+<td><p>{ “test_para_a”: “sys.cpu.nice” }</p></td>
+<td><p>1.插入失败 2.respones消息提示正确</p></td>
+<td><p>异常系</p></td>
+<td><p>2</p></td>
+<td><p>POST</p></td>
+<td><p><a class="reference external" href="http://192.168.20.47:8080/datanode/simple">/api/tests/</a></p></td>
+<td><p>422</p></td>
+<td><p>{ “code”:”422”, “detail”: { “test_para_a”:[“Missing data for required field.”], “test_para_b”:[“Missing data for required field.”] }, “message”:”bf7c4257036e821a8c931d25” }</p></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>1.0.1</p></td>
+</tr>
+<tr class="row-even"><td><p>Insert_003</p></td>
+<td><p>测试value为值为null插入</p></td>
+<td><p>用户注册</p></td>
+<td><p>Approved</p></td>
+<td><p>Low</p></td>
+<td></td>
+<td><p>1.系统部署完成2.插入接口可用</p></td>
+<td><p>1.调用数据插入接口 2.插入{“metric”:”cpu”, “timestamp”:14785269422, “value”:null “tags”:{“tag1”:”name2” } }</p></td>
+<td><p>{ “test_para_a”: “sys.cpu.nice”, “test_para_b”: 1531719554123 }</p></td>
+<td><p>1.插入失败 2.respones消息提示正确</p></td>
+<td><p>异常系</p></td>
+<td><p>2</p></td>
+<td><p>POST</p></td>
+<td><p><a class="reference external" href="http://192.168.20.47:8080/datanode/simple">/api/tests/</a></p></td>
+<td><p>200</p></td>
+<td><p>{ “para_a”:”sys.cpu.nice”, “para_b”:1531719554123 }</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1.0.2</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="validate">
+<span id="id6"></span><h3>validate<a class="headerlink" href="#validate" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>验证原理</p></li>
+<li><p>验证方式</p></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h3>验证原理<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 全等验证（validate不填写）</span>
+<span class="c1"># 接口实际返回值resp_body:</span>
+<span class="p">{</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span><span class="s2">&quot;422&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;detail&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;test_para_a&quot;</span><span class="p">:[</span><span class="s2">&quot;Missing data for required field.&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;test_para_b&quot;</span><span class="p">:[</span><span class="s2">&quot;Missing data for required field.&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;</span><span class="se">\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25</span><span class="s2">&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># checkpoints:</span>
+<span class="p">{</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span><span class="s2">&quot;422&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;detail&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;test_para_a&quot;</span><span class="p">:[</span><span class="s2">&quot;Missing data for required field.&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;test_para_b&quot;</span><span class="p">:[</span><span class="s2">&quot;Missing data for required field.&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;</span><span class="se">\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25</span><span class="s2">&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 部分验证（validate=0）</span>
+<span class="c1"># 接口实际返回值resp_body:</span>
+<span class="p">{</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span><span class="s2">&quot;422&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;detail&quot;</span><span class="p">:</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;test_para_a&quot;</span><span class="p">:[</span><span class="s2">&quot;Missing data for required field.&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;test_para_b&quot;</span><span class="p">:[</span><span class="s2">&quot;Missing data for required field.&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span><span class="s2">&quot;</span><span class="se">\u8bf7\u6c42\u6570\u636e\u6821\u9a8c\u5931\u8d25</span><span class="s2">&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># checkpoints:</span>
+<span class="p">{</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span><span class="s2">&quot;422&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;test_para_a&quot;</span><span class="p">:[</span><span class="s2">&quot;Missing data for required field.&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;test_para_b&quot;</span><span class="p">:[</span><span class="s2">&quot;Missing data for required field.&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>验证方式<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>全等验证</p></li>
+<li><p>部分验证</p></li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h3>全等验证<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">validate</span></code> 字段为空时, 对整体进行全等验证</p>
+<blockquote>
+<div><p>assert 语句为: <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">resp_body</span> <span class="pre">==</span> <span class="pre">checkpoints</span></code></p>
+</div></blockquote>
+</div>
+<div class="section" id="id10">
+<h3>部分验证<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">validate=</span> <span class="pre">0</span></code>, 验证resp_body 中的某个key
+的value是否包含在checkpoints对应key的value中.</p>
+<blockquote>
+<div><p>step1：先取到 需要验证的 key，即checkpoints.keys()</p>
+<p>step2：在resp_body 对获取key的value值如下，$..key获取resp_body
+所有key的值</p>
+<p><code class="docutils literal notranslate"><span class="pre">resp_data</span> <span class="pre">=</span> <span class="pre">jsonpath(&quot;resp_body&quot;,</span> <span class="pre">&quot;$..key&quot;)</span></code></p>
+<p>step3：对于唯一key，去全等验证，对于存在重复key
+，适用于”==”或者”in”，如下例中id填写一个也可以</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>部分验证，在 返回的response中带有 随机id 的场景就比较方便，或者返回中response内容比较多
+而我们需要去 check一些比较重要的字段。
+
+部分验证，对于返回的response 有多个重复 字段的， 用列表处理，如
+# 接口实际返回值resp_body:
+{
+    &quot;code&quot;:&quot;200&quot;,
+    &quot;data&quot;:[{
+        &quot;id&quot;:&quot;123456&quot;
+    },
+    {
+        &quot;id&quot;:&quot;654321&quot;
+    }
+    ]
+}
+# checkpoints:
+{
+    &quot;code&quot;:&quot;200&quot;,
+    &quot;id&quot;:[&quot;123456&quot;,&quot;654321&quot;] # ”==“
+}
+{
+    &quot;code&quot;:&quot;200&quot;,
+    &quot;id&quot;:[&quot;123456&quot;] # ”in“
+}不
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Rado</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="命令行接口.html">命令行接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="项目结构.html">项目结构</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">测试用例编写</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">接口测试用例表说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">实例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="测试代码编写.html">测试代码编写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="测试用例执行.html">测试用例执行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="生成测试报告.html">生成报告</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="项目结构.html" title="previous chapter">项目结构</a></li>
+      <li>Next: <a href="测试代码编写.html" title="next chapter">测试代码编写</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, tao.li.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/测试用例编写.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

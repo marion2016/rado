@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <title>测试用例执行 &#8212; Rado 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="生成报告" href="生成测试报告.html" />
+    <link rel="prev" title="测试代码编写" href="测试代码编写.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>测试用例执行<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>环境准备</p></li>
+<li><p>执行测试</p></li>
+<li><p>实例</p></li>
+</ul>
+<div class="section" id="id2">
+<h2>环境准备<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>激活虚拟环境：<code class="docutils literal notranslate"><span class="pre">pipenv</span> <span class="pre">shell</span></code>，若报错则指定Python解释器的路径<code class="docutils literal notranslate"><span class="pre">pipenv</span> <span class="pre">shell</span> <span class="pre">--python</span> <span class="pre">/path/to/python</span></code>，只需要在首次运行时执行 。</p></li>
+<li><p>安装依赖包：<code class="docutils literal notranslate"><span class="pre">pipenv</span> <span class="pre">install</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>执行测试<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>方式一： 执行<code class="docutils literal notranslate"><span class="pre">rado</span> <span class="pre">run</span> <span class="pre">--test_case</span> <span class="pre">/test_case/UserManager</span></code></p></li>
+<li><p>方式二：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   py.test -vv --junitxml=Result/result_{datetime.now().time()}.xml --alluredir=Result/result_{datetime.now().time()}/
+
+上述两种执行方式等价。
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--junitxml=Result/result_{datetime.now().time()}.xml</span></code>
+将junitxml格式的测试结果文件保存在Result目录下的result_当前时间.xml</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alluredir=Result/result_{datetime.now().time()}/</span></code>
+将Allure所需的结果数据文件保存在Result目录下的result_当前时间点/目录下。</p></li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>实例<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># rado run --test_case /test_case/UserManager</span>
+<span class="n">test_case</span><span class="o">/</span><span class="n">UserManage</span><span class="o">/</span><span class="n">test_PermissionList</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">TestPermissionList</span><span class="p">::</span><span class="n">test_UserManage_PermissionList_parameterize</span><span class="p">[</span><span class="mi">1001</span><span class="p">]</span> <span class="n">PASSED</span>                                                                                                                                                         <span class="p">[</span>  <span class="mi">4</span><span class="o">%</span><span class="p">]</span>
+<span class="n">test_case</span><span class="o">/</span><span class="n">UserManage</span><span class="o">/</span><span class="n">test_PermissionList</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">TestPermissionList</span><span class="p">::</span><span class="n">test_UserManage_PermissionList_parameterize</span><span class="p">[</span><span class="mi">1002</span><span class="p">]</span> <span class="n">PASSED</span>                                                                                                                                                          <span class="p">[</span>  <span class="mi">9</span><span class="o">%</span><span class="p">]</span>
+<span class="n">test_case</span><span class="o">/</span><span class="n">UserManage</span><span class="o">/</span><span class="n">test_PermissionList</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">TestPermissionList</span><span class="p">::</span><span class="n">test_UserManage_PermissionList_parameterize</span><span class="p">[</span><span class="mi">1003</span><span class="p">]</span> <span class="n">PASSED</span>                                                                                                                                                          <span class="p">[</span> <span class="mi">13</span><span class="o">%</span><span class="p">]</span>
+<span class="n">test_case</span><span class="o">/</span><span class="n">UserManage</span><span class="o">/</span><span class="n">test_PermissionList</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">TestPermissionList</span><span class="p">::</span><span class="n">test_UserManage_PermissionList_parameterize</span><span class="p">[</span><span class="mi">1004</span><span class="p">]</span> <span class="n">PASSED</span>                                                                                                                                                          <span class="p">[</span> <span class="mi">18</span><span class="o">%</span><span class="p">]</span>
+<span class="n">test_case</span><span class="o">/</span><span class="n">UserManage</span><span class="o">/</span><span class="n">test_PermissionList</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">TestPermissionList</span><span class="p">::</span><span class="n">test_UserManage_PermissionList_parameterize</span><span class="p">[</span><span class="mi">1005</span><span class="p">]</span> <span class="n">PASSED</span>                                                                                                                                                          <span class="p">[</span> <span class="mi">22</span><span class="o">%</span><span class="p">]</span>
+<span class="n">test_case</span><span class="o">/</span><span class="n">UserManage</span><span class="o">/</span><span class="n">test_PermissionList</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">TestPermissionList</span><span class="p">::</span><span class="n">test_UserManage_PermissionList_parameterize</span><span class="p">[</span><span class="mi">1006</span><span class="p">]</span> <span class="n">PASSED</span>                                                                                                                                                          <span class="p">[</span> <span class="mi">27</span><span class="o">%</span><span class="p">]</span>
+<span class="n">test_case</span><span class="o">/</span><span class="n">UserManage</span><span class="o">/</span><span class="n">test_PermissionList</span><span class="o">.</span><span class="n">py</span><span class="p">::</span><span class="n">TestPermissionList</span><span class="p">::</span><span class="n">test_UserManage_PermissionList_parameterize</span><span class="p">[</span><span class="mi">1007</span><span class="p">]</span> <span class="n">PASSED</span>                                                                                                                                                          <span class="p">[</span> <span class="mi">31</span><span class="o">%</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Rado</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="命令行接口.html">命令行接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="项目结构.html">项目结构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="测试用例编写.html">测试用例编写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="测试代码编写.html">测试代码编写</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">测试用例执行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">环境准备</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">执行测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">实例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="生成测试报告.html">生成报告</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="测试代码编写.html" title="previous chapter">测试代码编写</a></li>
+      <li>Next: <a href="生成测试报告.html" title="next chapter">生成报告</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, tao.li.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/测试用例执行.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
