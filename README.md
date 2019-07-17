@@ -45,7 +45,7 @@
 |                                                              |
 
 ## 使用手册
-在这里：
+[docs](rado.readthedocs.io)
 
 ## RoadMap
 
