@@ -1,4 +1,4 @@
-# Rado_InterFace_test
+# Rado
 
 基于pytest + requests + excel/json/yaml + locust + allure 的接口测试与接口性能自动化测试框架。
 
@@ -45,7 +45,7 @@
 |                                                              |
 
 ## 使用手册
-在这里：
+[docs](rado.readthedocs.io)
 
 ## RoadMap
 
