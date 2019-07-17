@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <title>测试代码编写 &#8212; Rado 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="测试用例执行" href="测试用例执行.html" />
+    <link rel="prev" title="测试用例编写" href="测试用例编写.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>测试代码编写<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>由于pytest的特性，测试代码存放在test_case下通常是test开头的py文件。一般将一个模块/接口定义放在一个测试文件里。下面定义了一个用户管理接口的代码</p>
+<p><strong>Step1 明确测试目标</strong></p>
+<p>第<code class="docutils literal notranslate"><span class="pre">3</span></code>行代码标记了这个类是为了测试<code class="docutils literal notranslate"><span class="pre">SFSPIC2019_UserManage_test_data.xlsx</span></code>下第1个sheet页，所以哥们儿EXCEL的第1个sheet页需要存放用户管理的接口测试用例</p>
+<p><strong>Step2 设置测试条件</strong></p>
+<p>往往在很多时候我们需要在执行某一个接口的测试用例前去做一些前置条件，比如，很多接口调用前，我们需要先登录。这些在用例执行前必要的操作，我们放在第<code class="docutils literal notranslate"><span class="pre">5</span></code>行的<code class="docutils literal notranslate"><span class="pre">setup_class</span></code>里。
+同样的第<code class="docutils literal notranslate"><span class="pre">8</span></code>行的<code class="docutils literal notranslate"><span class="pre">teardown_class</span></code>可以指定我们在用例结束后做一些操作，比如清数据库</p>
+<p>当然，这些前置/后置操作都需要自己去定制</p>
+<p><strong>Step3 测试执行</strong></p>
+<p>第<code class="docutils literal notranslate"><span class="pre">14</span></code>行中，我们通过pytest的参数化特性将用例表中parameterize为1的字段在一个函数中执行
+第<code class="docutils literal notranslate"><span class="pre">17</span></code>行中，调用了发请求的函数，详见<code class="docutils literal notranslate"><span class="pre">make_request</span></code>
+第<code class="docutils literal notranslate"><span class="pre">20</span></code>行中，调用了做断言的函数，详见<code class="docutils literal notranslate"><span class="pre">diff_response</span></code>
+最后我们还需补充一些非参数化的（对应parameterize为0），这类用例往往较少，所以需要去定制一些函数</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span>    <span class="k">class</span> <span class="nc">TestUserManage</span><span class="p">(</span><span class="n">TestBaseTest</span><span class="p">):</span>
+<span class="mi">2</span>       <span class="n">test_datas</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="n">get_test_data_from_excel</span><span class="p">(</span>
+<span class="mi">3</span>           <span class="s1">&#39;preparedData/SFSPIC2019_UserManage_test_data.xlsx&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="mi">4</span>
+<span class="mi">5</span>       <span class="k">def</span> <span class="nf">setup_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="mi">6</span>           <span class="k">pass</span>
+<span class="mi">7</span>
+<span class="mi">8</span>       <span class="k">def</span> <span class="nf">teardown_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="mi">9</span>           <span class="n">delete_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn_info</span><span class="p">,</span> <span class="s1">&#39;public.user_manager_users&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="mi">10</span>
+<span class="mi">11</span>      <span class="nd">@allure</span><span class="o">.</span><span class="n">story</span><span class="p">(</span><span class="s1">&#39;test UserManage_method_0&#39;</span><span class="p">)</span>
+<span class="mi">12</span>      <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;test_data&quot;</span><span class="p">,</span> <span class="n">test_datas</span><span class="p">[</span><span class="s1">&#39;parameterize&#39;</span><span class="p">],</span>
+<span class="mi">13</span>                               <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">[</span><span class="s1">&#39;parameterize&#39;</span><span class="p">])</span>
+<span class="mi">14</span>      <span class="k">def</span> <span class="nf">test_UserManage_method_0_parameterize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">token_admin</span><span class="p">):</span>
+<span class="mi">15</span>          <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">token_admin</span>
+<span class="mi">16</span>          <span class="k">with</span> <span class="n">allure</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="s1">&#39;make requests&#39;</span><span class="p">):</span>
+<span class="mi">17</span>              <span class="n">resp_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_requests</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+<span class="mi">18</span>
+<span class="mi">19</span>          <span class="k">with</span> <span class="n">allure</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="s1">&#39;check data&#39;</span><span class="p">):</span>
+<span class="mi">20</span>              <span class="bp">self</span><span class="o">.</span><span class="n">diff_response</span><span class="p">(</span><span class="n">resp_obj</span><span class="p">,</span> <span class="n">test_data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Rado</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="命令行接口.html">命令行接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="项目结构.html">项目结构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="测试用例编写.html">测试用例编写</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">测试代码编写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="测试用例执行.html">测试用例执行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="生成测试报告.html">生成报告</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="测试用例编写.html" title="previous chapter">测试用例编写</a></li>
+      <li>Next: <a href="测试用例执行.html" title="next chapter">测试用例执行</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, tao.li.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/测试代码编写.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <title>项目结构 &#8212; Rado 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="测试用例编写" href="测试用例编写.html" />
+    <link rel="prev" title="命令行接口" href="命令行接口.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>项目结构<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>生成的测试项目结构如下</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> # tree -L 2
+├── Pipfile
+├── Pipfile.lock
+├── Readme.md
+└── test_app
+    ├── conftest.py
+    ├── core
+    ├── __init__.py
+    ├── logs
+    ├── preparedData
+    ├── __pycache__
+    ├── Result
+    ├── test_case
+    └── utilse
+</pre></div>
+</div>
+<p>其中：</p>
+<ul>
+<li><p>preparedData: 存放测试用例信息，当前使用Excel进行管理。</p></li>
+<li><p>test_case: 存放测试用例代码。</p>
+<blockquote>
+<div><p>File: test_case.py —— 相当于功能模块/组件/业务场景级别的TestSuite。</p>
+<p>​ Class: TestCase —— 相当于单个接口级别TestSuite。</p>
+<p>​ Method： test_case() —— 测试用例</p>
+</div></blockquote>
+</li>
+<li><p>result： 存放测试数据、日志及测试报告。</p></li>
+<li><p>utilse：
+存放在编写测试用例代码时需要使用到的工具函数，例如读取从Excel中读取数据。</p></li>
+<li><p>core： 存放自定义的Exception，Logger等实例，避免部分模块的循环导入。</p></li>
+<li><p>顶层__init__.py:
+存放BaseTest类，所有的测试用例均基于该类，提供如下特殊方法：</p></li>
+</ul>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">setup_class()</span></code>: 在执行TestCase
+Class中所有测试用例之前进行一些准备工作，例如准备测试数据、登录系统等操作。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">teardown_class</span></code>: 在执行TestCase
+Class中所有测试用例之后进行一些收尾工作，例如清除测试数据、重新初始化环境等操作。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup_method()</span></code>:
+在执行某个测试用例之前进行一些准备工作，例如准备测试数据、登录系统等操作。`</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">teardown_method</span></code>:
+在执行单个测试用例之后进行一些收尾工作，例如清除测试数据、重新初始化环境等操作。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make_requests()</span></code>:
+根据测试用例描述信息，使用Request模块发送对应http请求，包含主要请求参数method、url等的简单校验。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">diff_respons()</span></code>: 比对接口返回结果与测试用例中描述的预期返回结果。</p>
+<blockquote>
+<div><p>当前主要对Respons状态码，Body进行对比。</p>
+</div></blockquote>
+</li>
+</ol>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Rado</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="命令行接口.html">命令行接口</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">项目结构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="测试用例编写.html">测试用例编写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="测试代码编写.html">测试代码编写</a></li>
+<li class="toctree-l1"><a class="reference internal" href="测试用例执行.html">测试用例执行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="生成测试报告.html">生成报告</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="命令行接口.html" title="previous chapter">命令行接口</a></li>
+      <li>Next: <a href="测试用例编写.html" title="next chapter">测试用例编写</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, tao.li.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/项目结构.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,7 @@
+*.swp
+*.pyc
+__pycache__/*
+dist/
+build/
+Rado.egg-info/
+.scannerwork/

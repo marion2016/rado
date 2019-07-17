@@ -1,0 +1,45 @@
+测试代码编写
+~~~~~~~~~~~~
+
+由于pytest的特性，测试代码存放在test\_case下通常是test开头的py文件。一般将一个模块/接口定义放在一个测试文件里。下面定义了一个用户管理接口的代码
+
+**Step1 明确测试目标**
+
+第\ ``3``\ 行代码标记了这个类是为了测试\ ``SFSPIC2019_UserManage_test_data.xlsx``\ 下第1个sheet页，所以哥们儿EXCEL的第1个sheet页需要存放用户管理的接口测试用例
+
+**Step2 设置测试条件**
+
+往往在很多时候我们需要在执行某一个接口的测试用例前去做一些前置条件，比如，很多接口调用前，我们需要先登录。这些在用例执行前必要的操作，我们放在第\ ``5``\ 行的\ ``setup_class``\ 里。
+同样的第\ ``8``\ 行的\ ``teardown_class``\ 可以指定我们在用例结束后做一些操作，比如清数据库
+
+当然，这些前置/后置操作都需要自己去定制
+
+**Step3 测试执行**
+
+第\ ``14``\ 行中，我们通过pytest的参数化特性将用例表中parameterize为1的字段在一个函数中执行
+第\ ``17``\ 行中，调用了发请求的函数，详见\ ``make_request``
+第\ ``20``\ 行中，调用了做断言的函数，详见\ ``diff_response``
+最后我们还需补充一些非参数化的（对应parameterize为0），这类用例往往较少，所以需要去定制一些函数
+
+::
+
+    1    class TestUserManage(TestBaseTest):                               
+    2       test_datas, ids = get_test_data_from_excel(
+    3           'preparedData/SFSPIC2019_UserManage_test_data.xlsx', 0)
+    4 
+    5       def setup_class(self):
+    6           pass
+    7 
+    8       def teardown_class(self):
+    9           delete_data(self.conn_info, 'public.user_manager_users', 'id')
+    10
+    11      @allure.story('test UserManage_method_0')
+    12      @pytest.mark.parametrize("test_data", test_datas['parameterize'],
+    13                               ids=ids['parameterize'])
+    14      def test_UserManage_method_0_parameterize(self, test_data, token_admin):
+    15          self.headers['Authorization'] = token_admin
+    16          with allure.step('make requests'):
+    17              resp_obj = self.make_requests(test_data)
+    18
+    19          with allure.step('check data'):
+    20              self.diff_response(resp_obj, test_data['response'])

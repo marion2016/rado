@@ -1,0 +1,45 @@
+测试用例执行
+~~~~~~~~
+
+-  环境准备
+-  执行测试
+-  实例
+
+环境准备
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+-  激活虚拟环境：\ ``pipenv shell``\ ，若报错则指定Python解释器的路径\ ``pipenv shell --python /path/to/python``\，只需要在首次运行时执行 。
+
+-  安装依赖包：\ ``pipenv install``
+
+执行测试
+>>>>>>>>
+
+-  方式一： 执行\ ``rado run --test_case /test_case/UserManager``
+
+-  方式二：
+
+   ::
+
+       py.test -vv --junitxml=Result/result_{datetime.now().time()}.xml --alluredir=Result/result_{datetime.now().time()}/
+
+    上述两种执行方式等价。
+
+-  ``--junitxml=Result/result_{datetime.now().time()}.xml``
+   将junitxml格式的测试结果文件保存在Result目录下的result\_当前时间.xml
+-  ``alluredir=Result/result_{datetime.now().time()}/``
+   将Allure所需的结果数据文件保存在Result目录下的result\_当前时间点/目录下。
+
+实例
+>>>>
+
+::
+
+    # rado run --test_case /test_case/UserManager
+    test_case/UserManage/test_PermissionList.py::TestPermissionList::test_UserManage_PermissionList_parameterize[1001] PASSED                                                                                                                                                         [  4%]
+    test_case/UserManage/test_PermissionList.py::TestPermissionList::test_UserManage_PermissionList_parameterize[1002] PASSED                                                                                                                                                          [  9%] 
+    test_case/UserManage/test_PermissionList.py::TestPermissionList::test_UserManage_PermissionList_parameterize[1003] PASSED                                                                                                                                                          [ 13%] 
+    test_case/UserManage/test_PermissionList.py::TestPermissionList::test_UserManage_PermissionList_parameterize[1004] PASSED                                                                                                                                                          [ 18%]
+    test_case/UserManage/test_PermissionList.py::TestPermissionList::test_UserManage_PermissionList_parameterize[1005] PASSED                                                                                                                                                          [ 22%] 
+    test_case/UserManage/test_PermissionList.py::TestPermissionList::test_UserManage_PermissionList_parameterize[1006] PASSED                                                                                                                                                          [ 27%] 
+    test_case/UserManage/test_PermissionList.py::TestPermissionList::test_UserManage_PermissionList_parameterize[1007] PASSED                                                                                                                                                          [ 31%]
