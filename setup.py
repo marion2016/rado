@@ -25,7 +25,7 @@ setuptools.setup(
         'colorlog==4.0.2',
         'datatest==0.9.6',
         'jsonpath==0.81',
-        'paramiko==2.5.0',
+        'paramiko==2.10.1',
         'xlrd==1.2.0',
         'requests==2.22.0',
     ],
